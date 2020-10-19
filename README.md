@@ -28,6 +28,7 @@ Web Scraping es el proceso de adquisición previo al análisis de los datos. En 
   - [Proyecto Scraper de Noticias. HTML: Requests y BeautifulSoup](#proyecto-scraper-de-noticias-html-requests-y-beautifulsoup)
     - [0. Prepraramos el entorno](#0-prepraramos-el-entorno)
     - [1. Descargando la página web](#1-descargando-la-página-web)
+    - [2. Parseando HTML con BeautifulSoup](#2-parseando-html-con-beautifulsoup)
 
 # Web Scraping: Extracción de Datos en la Web
 
@@ -114,3 +115,26 @@ Importamos el módulo requests y trabajamos con él.
 - `p12.headers`: muestra el encabezado de la respuesta.
 - `p12.request.headers`: muestra el encabezado de la solicitud. El contenido de esta request avisa al servidor que se está utilizando requests en python y que no es un navegador convencional. Puede ser modificado.
 - `p12.request.url`: muestra la url a la que se le hizo la solicitud.
+
+### 2. Parseando HTML con BeautifulSoup
+
+Lo que hacemos ahora es importar BeautifulSoup: `from bs4 import BeautifulSoup`
+
+Con el atributo `html.parser` separamos el texto largo en pedazos mas pequeños y mas fácil de identificar
+
+```py
+s = BeautifulSoup(p12.text, 'html.parser')
+
+# Imprimimos html estructurado
+print (s.prettify())
+
+#extraemos la clase
+s.find('ul', attrs={'class':'main-sections'})
+
+#especificamos todos los li
+s.find('ul', attrs={'class':'main-sections'}).find_all('li')
+
+#extraemos la etiqueta a
+s.find('ul', 'main-sections').find_all('a')
+```
+
