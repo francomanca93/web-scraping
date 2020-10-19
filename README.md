@@ -23,6 +23,8 @@ Web Scraping es el proceso de adquisición previo al análisis de los datos. En 
 - [Web Scraping: Extracción de Datos en la Web](#web-scraping-extracción-de-datos-en-la-web)
   - [Introducción, definiciones y ética](#introducción-definiciones-y-ética)
     - [Introducción y definiciones](#introducción-y-definiciones)
+    - [Ética y Legalidad](#ética-y-legalidad)
+      - [Robots.txt](#robotstxt)
 
 # Web Scraping: Extracción de Datos en la Web
 
@@ -45,3 +47,26 @@ Proyectos del curso
 3. Como usar las APIs de [Spotify](https://www.spotify.com/es/) para obtener información sobre artistas, discos y canciones.
 
 ¿Hacer web scraping es legal? ¿Es hacer hacking? Eso lo vemos ahora...
+
+### Ética y Legalidad
+
+¿Es legal scrapear un sitio? Hay preguntas que hay que hacerce antes de hacer scraping y estas son:
+
+- **¿Estoy violando alguna reglamentación local?**
+  - Cada país y cada region tiene distinta reglamentación y leyes. Hay que estar al tanto si las estamos violando en el proyecto.
+- **¿Estoy violando "Términos y condiciones" del sitio?**
+- **¿Estoy accediendo a lugares no autorizados?**
+- **¿Es legal el uso que le vamos a dar a los datos?**
+
+Hay un archivo importante revisar antes de hacer scraping en alguna pagina y este es el robots.txt.
+
+#### Robots.txt
+
+Este archivo encontramos información sobre el sitio y nos muestra que sitio o rutas, el dueño de la página no quiere que acudamos.
+
+Disallow: Rutas que no quieren que se le haga scraping o que sean indexadas.
+
+Crawl-delay: 30: Demora en segundos entre cada solicitud del sitio. Para no sobrecargar este sitio.
+
+**¿Como accedemos a el?** De la siguiente forma:
+https://www.PAGINA_A_SCRAPEAR.com/robots.txt
