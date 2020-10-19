@@ -25,6 +25,9 @@ Web Scraping es el proceso de adquisición previo al análisis de los datos. En 
     - [Introducción y definiciones](#introducción-y-definiciones)
     - [Ética y Legalidad](#ética-y-legalidad)
       - [Robots.txt](#robotstxt)
+  - [Proyecto Scraper de Noticias. HTML: Requests y BeautifulSoup](#proyecto-scraper-de-noticias-html-requests-y-beautifulsoup)
+    - [0. Prepraramos el entorno](#0-prepraramos-el-entorno)
+    - [1. Descargando la página web](#1-descargando-la-página-web)
 
 # Web Scraping: Extracción de Datos en la Web
 
@@ -70,3 +73,44 @@ Crawl-delay: 30: Demora en segundos entre cada solicitud del sitio. Para no sobr
 
 **¿Como accedemos a el?** De la siguiente forma:
 https://www.PAGINA_A_SCRAPEAR.com/robots.txt
+
+## Proyecto Scraper de Noticias. HTML: Requests y BeautifulSoup
+
+En este módulo veremos cómo utilizar las bibliotecas `requests` y `bs4` para programar scrapers de sitios HTML. Nos propondremos armar un scraper de noticias del diario <a href='www.pagina12.com.ar'>Página 12</a>.
+
+Supongamos que queremos leer el diario por internet. Lo primero que hacemos es abrir el navegador, escribir la URL del diario y apretar Enter para que aparezca la página del diario. Lo que ocurre en el momento en el que apretamos Enter es lo siguiente:
+1. El navegador envía una solicitud a la URL pidiéndole información.
+2. El servidor recibe la petición y procesa la respuesta.
+3. El servidor envía la respuesta a la IP de la cual recibió la solicitud.
+4. Nuestro navegador recibe la respuesta y la muestra **formateada** en pantalla.
+
+Para hacer un scraper debemos hacer un programa que replique este flujo de forma automática y sistemática para luego extraer la información deseada de la respuesta. Utilizaremos `requests` para realizar peticiones y recibir las respuestas y `bs4` para *parsear* la respuesta y extraer la información.
+
+Te dejo unos links que tal vez te sean de utilidad:
+- [Códigos de status HTTP](https://developer.mozilla.org/es/docs/Web/HTTP/Status)
+- [Documentación de requests](https://requests.kennethreitz.org/en/master/)
+- [Documentación de bs4](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
+
+### 0. Prepraramos el entorno
+
+Para este caso particular al ser un proyecto personal no hay problemas con compartir la información y por ende utilizaré [google colab](https://colab.research.google.com/notebooks/welcome.ipynb?hl=es_US) para que el trabajo sea mas rápido, pero los pasos para configurar el entorno de trabajo de un proyecto profesional en Linux o Mac, es el siguiente:
+
+1. Crear una carpeta con el nombre del proyecto: `mkdir webscraping_noticias`
+2. Ingresar carpeta del proyecto y crear un entorno virtual: `python3 -m venv nombre_entorno`
+3. Activar el entorno virtual: `source nombre_entorno/bin/activate`
+4. Instalar jupyter notebook (no hace falta instalar toda la suite Anaconda) : `python3 pip install jupyter`
+5. Instalar requests: `pip install requests`
+6. Instalar Beautiful Soup: `pip install beautifulsoup4`
+7. Verificar que todo se instalo utilizando el comando `pip freeze`
+
+### 1. Descargando la página web
+
+Importamos el módulo requests y trabajamos con él. 
+
+- `p12 = requests.get(url)`: realiza la solicitud.
+- `p12.status_code`: muestra el código de status HTTP de la respuesta.
+- `print(p12.text)`: muestra el HTML de la página sin formatear.
+- `p12.content`: muestra el contenido de la respuesta, puede ser bytes, imágenes, audio.
+- `p12.headers`: muestra el encabezado de la respuesta.
+- `p12.request.headers`: muestra el encabezado de la solicitud. El contenido de esta request avisa al servidor que se está utilizando requests en python y que no es un navegador convencional. Puede ser modificado.
+- `p12.request.url`: muestra la url a la que se le hizo la solicitud.
