@@ -32,6 +32,7 @@ Web Scraping es el proceso de adquisición previo al análisis de los datos. En 
     - [3. Extrayendo información](#3-extrayendo-información)
     - [4. Manejo de errores](#4-manejo-de-errores)
     - [5. Descargando contenido](#5-descargando-contenido)
+    - [6. Contenido multimedia](#6-contenido-multimedia)
 
 # Web Scraping: Extracción de Datos en la Web
 
@@ -299,4 +300,33 @@ def extract_data(url_nota):
     print('\n')
   
   return dict_info_scraper # Dictionary
+```
+
+### 6. Contenido multimedia
+
+En esta sección lo que se hará es descargar el contenido multimedia de la nota, la imagen, y la visualizaremos. 
+
+Lo que se hará es crear una función para descargar la imagen principal de la nota. Ingresamos la url de la nota y devolvemos imagen.
+
+```py
+def extract_content_multimedia(url_nota):
+  ''' Función para descargar imagen principal de la nota. Ingremosa la url de la nota y devolvemos imagen'''
+  try:
+    nota = requests.get(url_nota)
+    if nota.status_code == 200:
+      # Buscamos las imagenes.
+      s_nota = BeautifulSoup(nota.text, 'lxml')
+      media = s_nota.find('div', attrs = {'class': 'article-main-media-image'})
+      imagenes = media.find_all('img')
+      if len(imagenes) == 0:
+        print('No se encontraron imagenes')
+      else: 
+        imagen = imagenes[3] # Del conjunto de imagenes, escogemos la 4ta (3), ya que es la imagen principal
+        img_src = imagen.get('data-src') # Traemos el link de la imagen
+        img_req = requests.get(img_src) # Requests al link de la imagen
+        if img_req.status_code == 200:
+          return Image(img_req.content) # Retornamo imagen. Dependece >> from IPython.display import Image <<
+
+  except Exception as e:
+    print(e)  
 ```
