@@ -30,6 +30,7 @@ Web Scraping es el proceso de adquisición previo al análisis de los datos. En 
     - [1. Descargando la página web](#1-descargando-la-página-web)
     - [2. Parseando HTML con BeautifulSoup](#2-parseando-html-con-beautifulsoup)
     - [3. Extrayendo información](#3-extrayendo-información)
+    - [4. Manejo de errores](#4-manejo-de-errores)
 
 # Web Scraping: Extracción de Datos en la Web
 
@@ -224,3 +225,19 @@ def main():
 if __name__ == '__main__':
   main()
 ```
+
+### 4. Manejo de errores
+
+Cuando ocurre algún error en el código, Python detiene la ejecución y nos devuelve una **excepción**, que no es más que una señal que ha occurrido un funcionamiento no esperado o error en el programa, indicándonos aproximadamente qué fue lo que ocurrió.
+
+Para hacer esto podemos usar la sentencia `try-except`, que nos permite **probar (Try)** una sentencia y **capturar un eventual error** y hacer algo al respecto **(except)** en lugar de detener el programa directamente.
+
+```py
+try:
+  codigo...
+except Exception as e:
+  print('Error')
+  print(e)
+```
+
+Excelente link para aprender como tratar errores con mas detalles: [Tratamiento de errores. Sentencia try-except](http://research.iac.es/sieinvens/python-course/source/errores_depuracion.html).
