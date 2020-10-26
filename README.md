@@ -31,6 +31,7 @@ Web Scraping es el proceso de adquisición previo al análisis de los datos. En 
     - [2. Parseando HTML con BeautifulSoup](#2-parseando-html-con-beautifulsoup)
     - [3. Extrayendo información](#3-extrayendo-información)
     - [4. Manejo de errores](#4-manejo-de-errores)
+    - [5. Descargando contenido](#5-descargando-contenido)
 
 # Web Scraping: Extracción de Datos en la Web
 
@@ -241,3 +242,61 @@ except Exception as e:
 ```
 
 Excelente link para aprender como tratar errores con mas detalles: [Tratamiento de errores. Sentencia try-except](http://research.iac.es/sieinvens/python-course/source/errores_depuracion.html).
+
+### 5. Descargando contenido
+
+En esta sección se desarrollo una función que recibe la url de la nota y devuelve un diccionario con el scrapper, listo para ser guardado en una base de datos.
+
+Se utilizará la siguiente imagen para saber que datos extraer del periodico.
+
+![diario](https://imgur.com/eoj37pn.png)
+
+Para extraer información se utiliza el inspector de elementos del navegador que se esté utilizando. Con F12 abrimos las herramientas de desarrollador y en él utilizamos el inspector de elementos.
+
+```py
+def extract_data(url_nota):
+  ''' Función que recibe la url de la nota de devuelve un diccionario con el scrapper'''
+  
+  dict_info_scraper = {}
+  
+  try:
+    nota = requests.get(url_nota)
+    if nota.status_code == 200:
+      s_nota = BeautifulSoup(nota.text, 'lxml')
+
+      # Extraer el titulo
+      titulo = s_nota.find('h1', attrs = {'class': 'article-title'})
+      dict_info_scraper['Titulo'] = titulo.text
+      # Extraer autor
+      autor = s_nota.find('div', attrs={'class':'article-author'})
+      dict_info_scraper['Autor'] = autor.text
+      # Extraer fecha del titulo
+      fecha = s_nota.find('span', attrs = {'pubdate': 'pubdate'}).get('datetime')
+      dict_info_scraper['Fecha'] = fecha
+      # Extraer el volanta
+      volanta = s_nota.find('h2', attrs = {'class': 'article-prefix'})
+      dict_info_scraper['Volanta'] = volanta.text
+      # Extraer copete
+      try:
+        copete = s_nota.find('div', attrs = {'class': 'article-summary'})
+        dict_info_scraper['Copete'] = copete.text
+      except:
+        print(None)
+        print('\n')
+      # Extraer epigrafe
+      epigrafe = s_nota.find('span', attrs = {'class': 'article-main-media-text-image'})
+      dict_info_scraper['Epigrafe'] = epigrafe.text
+      # Extraer cuerpo
+      cuerpo = s_nota.find('div', attrs = {'class': 'article-body diario'}).find_all('p')
+      articulo_texto = []
+      for parrafo in cuerpo:
+        articulo_texto.append(parrafo.text)
+      dict_info_scraper['Cuerpo'] = articulo_texto
+
+  except Exception as e:
+    print('Error')
+    print(e)
+    print('\n')
+  
+  return dict_info_scraper # Dictionary
+```
