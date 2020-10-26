@@ -29,6 +29,7 @@ Web Scraping es el proceso de adquisición previo al análisis de los datos. En 
     - [0. Prepraramos el entorno](#0-prepraramos-el-entorno)
     - [1. Descargando la página web](#1-descargando-la-página-web)
     - [2. Parseando HTML con BeautifulSoup](#2-parseando-html-con-beautifulsoup)
+    - [3. Extrayendo información](#3-extrayendo-información)
 
 # Web Scraping: Extracción de Datos en la Web
 
@@ -138,3 +139,88 @@ s.find('ul', attrs={'class':'main-sections'}).find_all('li')
 s.find('ul', 'main-sections').find_all('a')
 ```
 
+### 3. Extrayendo información
+
+En esta sección se crean 3 funciones para poder extraer información de Pagina12. Las funciones son las siguientes:
+
+```py
+def get_section_links(url):
+  ''' Funcion para traer los links de las secciones'''
+  p12 = requests.get(url) # Hacemos un requests a la url que ingresamos
+  links_secciones = [] # Lista de links a secciones
+  # Intentamos y si hay un error lo atrapamos
+  try:
+    if p12.status_code == 200:
+      s = BeautifulSoup(p12.text, 'html.parser') # Objeto soup
+      secciones = s.find('ul', attrs={'class':'main-sections'}).find_all('li') # Buscamos las secciones
+      links_secciones = [seccion.a.get('href') for seccion in secciones] # Extraemos los links
+  except Exception as e: # Capturamos error
+    print('Error')
+    print(e)
+
+  return links_secciones
+```
+
+Extraidos los links de cada sección, elegimos cual queremos scrapear:
+
+```py
+def get_section_soup(link_section):
+  ''' Obtengo una seccion deseada pasandole el link a la sección'''
+  section = requests.get(link_section)
+  try: 
+    if section.status_code == 200:
+      soup_section = BeautifulSoup(section.text, 'lxml')
+  except Exception as e:
+    print('Ocurrio un error')
+    print(e)
+    print('\n')
+  
+  return soup_section
+```
+
+Scrapeada la sección que deseamos, obtenemos los links de las noticias de la sección parseando el objeto soup:
+
+```py
+def get_links_for_section(soup):
+  ''' Busca en un objeto soup los links de los articulos'''
+  try:
+    news = soup.find_all('div', attrs = {'class':'article-item__content'})
+    links_news = [new.a.get('href') for new in news]
+  except Exception as e:
+    print('Error')
+    print(e)
+
+  return links_news
+```
+
+Para finalizar llamamos todas las funciones en orden para extraer lo que deseamos:
+
+```py
+def main():
+  ''' Funcion principal que junta a todas las funciones anteriores'''
+  links_secciones = []
+  links_scrapeados = []
+
+  print('Extrayendo links de la seccion que queremos')
+  url = 'https://www.pagina12.com.ar'
+  links_secciones = get_section_links(url)
+
+  print('Selecciona el link a scrapear')
+  for i, link in enumerate(links_secciones):
+    print(f'Opcion {i}: {link}')
+  
+  user = int(input('Opcion: ')) # Entrada de usuario
+
+  try:
+      section_text = get_section_soup(links_secciones[user]) # Obtenemos texto
+  except IndexError:
+      print('Invalid Option')
+
+  links_scrapeados = get_links_for_section(section_text) # Scraper de links
+
+  for link in links_scrapeados:
+    print(f'Link: {link}')
+
+if __name__ == '__main__':
+  main()
+```
